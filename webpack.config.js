@@ -82,6 +82,11 @@ module.exports = {
                     name: 'images/[name].[ext]',
                     context: './src/images'
                 }
+            },
+            {
+                test: /\.csv/,
+                exclude: /node_modules/,
+                loader: 'file-loader'
             }
         ]
     },

@@ -1,5 +1,4 @@
 const d3 = require('d3');
-const Tabletop = require('tabletop');
 const _ = {
     map: require('lodash/map'),
     uniqBy: require('lodash/uniqBy'),
@@ -16,8 +15,9 @@ const GraphingRadar = require('../graphing/radar');
 const MalformedDataError = require('../exceptions/malformedDataError');
 const SheetNotFoundError = require('../exceptions/sheetNotFoundError');
 const ContentValidator = require('./contentValidator');
-const Sheet = require('./sheet');
 const ExceptionMessages = require('./exceptionMessages');
+
+const radarName = "Wincasa Technology Radar December 2018";
 
 const plotRadar = function (title, blips) {
     document.title = title;
@@ -52,54 +52,6 @@ const plotRadar = function (title, blips) {
     new GraphingRadar(size, radar).init().plot();
 }
 
-const GoogleSheet = function (sheetReference, sheetName) {
-    var self = {};
-
-    self.build = function () {
-        var sheet = new Sheet(sheetReference);
-        sheet.exists(function(notFound) {
-            if (notFound) {
-                plotErrorMessage(notFound);
-                return;
-            }
-
-            Tabletop.init({
-                key: sheet.id,
-                callback: createBlips
-            });
-        });
-
-        function createBlips(__, tabletop) {
-
-            try {
-
-                if (!sheetName) {
-                    sheetName = tabletop.foundSheetNames[0];
-                }
-                var columnNames = tabletop.sheets(sheetName).columnNames;
-
-                var contentValidator = new ContentValidator(columnNames);
-                contentValidator.verifyContent();
-                contentValidator.verifyHeaders();
-
-                var all = tabletop.sheets(sheetName).all();
-                var blips = _.map(all, new InputSanitizer().sanitize);
-
-                plotRadar(tabletop.googleSheetName, blips);
-            } catch (exception) {
-                plotErrorMessage(exception);
-            }
-        }
-    };
-
-    self.init = function () {
-        plotLoading();
-        return self;
-    };
-
-    return self;
-};
-
 const CSVDocument = function (url) {
     var self = {};
 
@@ -115,7 +67,7 @@ const CSVDocument = function (url) {
             contentValidator.verifyContent();
             contentValidator.verifyHeaders();
             var blips = _.map(data, new InputSanitizer().sanitize);
-            plotRadar(FileName(url), blips);
+            plotRadar(radarName, blips);
         } catch (exception) {
             plotErrorMessage(exception);
         }
@@ -128,28 +80,6 @@ const CSVDocument = function (url) {
 
     return self;
 };
-
-const QueryParams = function (queryString) {
-    var decode = function (s) {
-        return decodeURIComponent(s.replace(/\+/g, " "));
-    };
-
-    var search = /([^&=]+)=?([^&]*)/g;
-
-    var queryParams = {};
-    var match;
-    while (match = search.exec(queryString))
-        queryParams[decode(match[1])] = decode(match[2]);
-
-    return queryParams
-};
-
-const DomainName = function (url) {
-    var search = /.+:\/\/([^\/]+)/;
-    var match = search.exec(decodeURIComponent(url.replace(/\+/g, " ")));
-    return match == null ? null : match[1];
-}
-
 
 const FileName = function (url) {
     var search = /([^\/]+)$/;
@@ -166,36 +96,11 @@ const GoogleSheetInput = function () {
     var self = {};
     
     self.build = function () {
-        var domainName = DomainName(window.location.search.substring(1));
-        var queryParams = QueryParams(window.location.search.substring(1));
+        const csv = require("../csv/spreadsheet.csv");
 
-        if (domainName && queryParams.sheetId.endsWith('csv')) {
-            var sheet = CSVDocument(queryParams.sheetId);
-            sheet.init().build();
-        }
-        else if (domainName && domainName.endsWith('google.com') && queryParams.sheetId) {
-            var sheet = GoogleSheet(queryParams.sheetId, queryParams.sheetName);
-            console.log(queryParams.sheetName)
+        var sheet = CSVDocument(csv);
 
-            sheet.init().build();
-        } else {
-            var content = d3.select('body')
-                .append('div')
-                .attr('class', 'input-sheet');
-            set_document_title();
-
-            plotLogo(content);
-
-            var bannerText = '<div><h1>Build your own radar</h1><p>Once you\'ve <a href ="https://www.thoughtworks.com/radar/byor">created your Radar</a>, you can use this service' +
-                ' to generate an <br />interactive version of your Technology Radar. Not sure how? <a href ="https://www.thoughtworks.com/radar/how-to-byor">Read this first.</a></p></div>';
-
-            plotBanner(content, bannerText);
-
-            plotForm(content);
-
-            plotFooter(content);
-
-        }
+        sheet.init().build();
     };
 
     return self;
