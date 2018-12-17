@@ -13,7 +13,6 @@ const Ring = require('../models/ring');
 const Blip = require('../models/blip');
 const GraphingRadar = require('../graphing/radar');
 const MalformedDataError = require('../exceptions/malformedDataError');
-const SheetNotFoundError = require('../exceptions/sheetNotFoundError');
 const ContentValidator = require('./contentValidator');
 const ExceptionMessages = require('./exceptionMessages');
 
@@ -80,17 +79,6 @@ const CSVDocument = function (url) {
 
     return self;
 };
-
-const FileName = function (url) {
-    var search = /([^\/]+)$/;
-    var match = search.exec(decodeURIComponent(url.replace(/\+/g, " ")));
-    if (match != null) {
-        var str = match[1];
-        return str;
-    }
-    return url;
-}
-
 
 const GoogleSheetInput = function () {
     var self = {};
@@ -185,8 +173,6 @@ function plotErrorMessage(exception) {
 
     if (exception instanceof MalformedDataError) {
         message = message.concat(exception.message);
-    } else if (exception instanceof SheetNotFoundError) {
-        message = exception.message;
     } else {
         console.error(exception);
     }
