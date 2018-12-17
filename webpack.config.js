@@ -6,6 +6,7 @@ const args = require('yargs').argv;
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 let isProd = args.prod;
 let isDev = args.dev;
@@ -32,7 +33,8 @@ let plugins = [
         chunks: ['common'],
         inject: 'body',
         filename: 'error.html'
-    })
+    }),
+    new CleanWebpackPlugin(["dist"])
 ];
 
 if (isProd) {

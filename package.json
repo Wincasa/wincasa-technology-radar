@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "chance": "^1.0.18",
+    "clean-webpack-plugin": "^1.0.0",
     "d3": "^4.13.0",
     "d3-tip": "^0.7.1",
     "lodash": "^4.17.11",
