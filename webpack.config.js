@@ -1,6 +1,5 @@
 'use strict';
 
-const webpack = require('webpack');
 const path = require('path');
 const buildPath = path.join(__dirname, './dist');
 const args = require('yargs').argv;
@@ -14,6 +13,7 @@ let isDev = args.dev;
 let main = ['./src/site.js'];
 let common = ['./src/common.js'];
 let devtool;
+let minimize = false;
 
 if (isDev) {
     main.push('webpack-dev-server/client?http://0.0.0.0:8080');
@@ -36,17 +36,7 @@ let plugins = [
 ];
 
 if (isProd) {
-    plugins.push(
-        new webpack.NoErrorsPlugin(),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            },
-            mangle: true
-        }),
-        new webpack.optimize.OccurenceOrderPlugin()
-    );
+    minimize = true;
 }
 
 module.exports = {
@@ -97,6 +87,10 @@ module.exports = {
     plugins: plugins,
 
     devtool: devtool,
+
+    optimization: {
+        minimize: minimize
+    },
 
     devServer: {
         contentBase: buildPath,
