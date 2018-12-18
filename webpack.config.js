@@ -85,7 +85,7 @@ const config = {
     }
 };
 
-module.exports = (env, argv) => {
+module.exports = (_env, argv) => {
     if (argv.mode === 'development') {
         config.entry.main.push('webpack-dev-server/client?http://0.0.0.0:8080');
         config.devtool = 'source-map';
