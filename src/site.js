@@ -2,6 +2,6 @@ require('./common');
 require('./images/logo.png');
 require('./images/radar_legend.png');
 
-const GoogleSheetInput = require('./util/factory');
+import { GoogleSheetInput } from './util/factory';
 
 GoogleSheetInput().build();

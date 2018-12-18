@@ -1,15 +1,13 @@
-const Ring = function (name, order) {
-  var self = {};
+export function Ring(name, order) {
+    var self = {};
 
-  self.name = function () {
-    return name;
-  };
+    self.name = function () {
+        return name;
+    };
 
-  self.order = function () {
-    return order;
-  };
+    self.order = function () {
+        return order;
+    };
 
-  return self;
-};
-
-module.exports = Ring;
+    return self;
+}

@@ -7,6 +7,7 @@ const args = require('yargs').argv;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 let isProd = args.prod;
 let isDev = args.dev;
@@ -22,6 +23,7 @@ if (isDev) {
 }
 
 let plugins = [
+    new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({filename: '[name].[hash].css'}),
     new HtmlWebpackPlugin({
         template: './src/index.html',
