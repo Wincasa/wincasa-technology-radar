@@ -12,7 +12,6 @@ let main = ['./src/site.js'];
 let common = ['./src/common.js'];
 
 let plugins = [
-    //new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({filename: '[name].[hash].css'}),
     new HtmlWebpackPlugin({
         template: './src/index.html',
@@ -93,6 +92,10 @@ module.exports = (_env, argv) => {
 
     if (argv.mode === 'production') {
         config.optimization = {minimize: true};
+    }
+
+    if (argv.analyze) {
+        config.plugins.push(new BundleAnalyzerPlugin());
     }
 
     return config;
