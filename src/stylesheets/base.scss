@@ -105,22 +105,6 @@ body {
       display:block;
     }
 
-    .radar-title .radar-title__logo {
-      display: block;
-      width: auto;
-
-      a {
-        padding: 40px 10px 0;
-        display: block;
-        &::after {
-          display: none;
-        }
-      }
-      img {
-        max-width: 150px;
-      }
-    }
-
     .button {
       display: none;
     }
