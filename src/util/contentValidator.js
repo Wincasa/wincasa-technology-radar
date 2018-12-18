@@ -1,35 +1,27 @@
-const _ = {
-  map: require('lodash/map'),
-  uniqBy: require('lodash/uniqBy'),
-  capitalize: require('lodash/capitalize'),
-  each: require('lodash/each')
-};
+import { each } from 'lodash-es';
 
-const MalformedDataError = require('../../src/exceptions/malformedDataError');
-const ExceptionMessages = require('./exceptionMessages');
+import { MalformedDataError } from '../exceptions/malformedDataError';
+import { ExceptionMessages } from './exceptionMessages';
 
-
-const ContentValidator = function (columnNames) {
-  var self = {};
-  columnNames = columnNames.map(function(columnName) {
-    return columnName.trim();
-  });
-
-  self.verifyContent = function() {
-    if(columnNames.length == 0){
-      throw new MalformedDataError(ExceptionMessages.MISSING_CONTENT);
-    }
-  };
-
-  self.verifyHeaders = function() {
-    _.each(['name', 'ring', 'quadrant', 'isNew', 'description'], function (field) {
-      if (columnNames.indexOf(field) == -1) {
-        throw new MalformedDataError(ExceptionMessages.MISSING_HEADERS);
-      }
+export function ContentValidator(columnNames) {
+    var self = {};
+    columnNames = columnNames.map(function(columnName) {
+        return columnName.trim();
     });
-  };
 
-  return self;
-};
+    self.verifyContent = function() {
+        if(columnNames.length == 0){
+            throw new MalformedDataError(ExceptionMessages.MISSING_CONTENT);
+        }
+    };
 
-module.exports = ContentValidator;
+    self.verifyHeaders = function() {
+        each(['name', 'ring', 'quadrant', 'isNew', 'description'], function (field) {
+            if (columnNames.indexOf(field) == -1) {
+                throw new MalformedDataError(ExceptionMessages.MISSING_HEADERS);
+            }
+        });
+    };
+
+    return self;
+}

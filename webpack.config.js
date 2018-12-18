@@ -1,27 +1,18 @@
 'use strict';
 
-const webpack = require('webpack');
 const path = require('path');
 const buildPath = path.join(__dirname, './dist');
-const args = require('yargs').argv;
 
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-let isProd = args.prod;
-let isDev = args.dev;
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 let main = ['./src/site.js'];
 let common = ['./src/common.js'];
-let devtool;
-
-if (isDev) {
-    main.push('webpack-dev-server/client?http://0.0.0.0:8080');
-    devtool = 'source-map';
-}
 
 let plugins = [
-    new ExtractTextPlugin('[name].[hash].css'),
+    new MiniCssExtractPlugin({filename: '[name].[hash].css'}),
     new HtmlWebpackPlugin({
         template: './src/index.html',
         chunks: ['main'],
@@ -32,24 +23,11 @@ let plugins = [
         chunks: ['common'],
         inject: 'body',
         filename: 'error.html'
-    })
+    }),
+    new CleanWebpackPlugin(['dist'])
 ];
 
-if (isProd) {
-    plugins.push(
-        new webpack.NoErrorsPlugin(),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            },
-            mangle: true
-        }),
-        new webpack.optimize.OccurenceOrderPlugin()
-    );
-}
-
-module.exports = {
+const config = {
     entry: {
         'main' : main,
         'common' : common
@@ -68,20 +46,36 @@ module.exports = {
     },
 
     module: {
-        loaders: [
-            { test: /\.json$/, loader: 'json'},
-            { test: /\.js$/, exclude: /node_modules/, loader: 'babel'},
-            { test: /\.scss$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('style', 'css?sourceMap!sass') },
-            { test: /\.(png|jpg|ico)$/, exclude: /node_modules/, loader: 'file-loader?name=images/[name].[ext]&context=./src/images' }
+        rules: [
+            { test: /\.json$/, use: 'json-loader', exclude: /node_modules/ },
+            { test: /\.js$/, exclude: /node_modules/, use: 'babel-loader'},
+            {
+                test: /\.scss$/,
+                exclude: /node_modules/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ]
+            },
+            {
+                test: /\.(png|jpg|ico)$/,
+                exclude: /node_modules/,
+                loader: 'file-loader',
+                options: {
+                    name: 'images/[name].[ext]',
+                    context: './src/images'
+                }
+            },
+            {
+                test: /\.csv/,
+                exclude: /node_modules/,
+                loader: 'file-loader'
+            }
         ]
     },
 
-    quiet: false,
-    noInfo: false,
-
     plugins: plugins,
-
-    devtool: devtool,
 
     devServer: {
         contentBase: buildPath,
@@ -90,3 +84,19 @@ module.exports = {
     }
 };
 
+module.exports = (_env, argv) => {
+    if (argv.mode === 'development') {
+        config.entry.main.push('webpack-dev-server/client?http://0.0.0.0:8080');
+        config.devtool = 'source-map';
+    }
+
+    if (argv.mode === 'production') {
+        config.optimization = {minimize: true};
+    }
+
+    if (argv.analyze) {
+        config.plugins.push(new BundleAnalyzerPlugin());
+    }
+
+    return config;
+};

@@ -1,68 +1,62 @@
-const MalformedDataError = require('../exceptions/malformedDataError');
-const ExceptionMessages = require('../util/exceptionMessages');
+import { MalformedDataError } from '../exceptions/malformedDataError';
+import { ExceptionMessages } from '../util/exceptionMessages';
 
-const _ = {
-  map: require('lodash/map'),
-  uniqBy: require('lodash/uniqBy'),
-  sortBy: require('lodash/sortBy')
-};
+import { map, uniqBy, sortBy } from 'lodash-es';
 
-const Radar = function() {
-  var self, quadrants, blipNumber, addingQuadrant;
+export function Radar() {
+    var self, quadrants, blipNumber, addingQuadrant;
 
-  blipNumber = 0;
-  addingQuadrant = 0;
-  quadrants = [
-    {order: 'first', startAngle: 90},
-    {order: 'second', startAngle: 0},
-    {order: 'third', startAngle: -90},
-    {order: 'fourth', startAngle: -180}
-  ];
-  self = {};
+    blipNumber = 0;
+    addingQuadrant = 0;
+    quadrants = [
+        {order: 'first', startAngle: 90},
+        {order: 'second', startAngle: 0},
+        {order: 'third', startAngle: -90},
+        {order: 'fourth', startAngle: -180}
+    ];
+    self = {};
 
-  function setNumbers(blips) {
-    blips.forEach(function (blip) {
-      blip.setNumber(++blipNumber);
-    });
-  }
-
-  self.addQuadrant = function (quadrant) {
-    if(addingQuadrant >= 4) {
-      throw new MalformedDataError(ExceptionMessages.TOO_MANY_QUADRANTS);
+    function setNumbers(blips) {
+        blips.forEach(function (blip) {
+            blip.setNumber(++blipNumber);
+        });
     }
-    quadrants[addingQuadrant].quadrant = quadrant;
-    setNumbers(quadrant.blips());
-    addingQuadrant++;
-  };
 
-   function allQuadrants() {
-    if (addingQuadrant < 4)
-      throw new MalformedDataError(ExceptionMessages.LESS_THAN_FOUR_QUADRANTS);
+    self.addQuadrant = function (quadrant) {
+        if(addingQuadrant >= 4) {
+            throw new MalformedDataError(ExceptionMessages.TOO_MANY_QUADRANTS);
+        }
+        quadrants[addingQuadrant].quadrant = quadrant;
+        setNumbers(quadrant.blips());
+        addingQuadrant++;
+    };
 
-    return _.map(quadrants, 'quadrant');
-  }
+    function allQuadrants() {
+        if (addingQuadrant < 4)
+            throw new MalformedDataError(ExceptionMessages.LESS_THAN_FOUR_QUADRANTS);
 
-  function allBlips() {
-    return allQuadrants().reduce(function (blips, quadrant) {
-      return blips.concat(quadrant.blips());
-    }, []);
-  }
+        return map(quadrants, 'quadrant');
+    }
 
-  self.rings = function () {
-    return _.sortBy(_.map(_.uniqBy(allBlips(), function (blip) {
-      return blip.ring().name();
-    }), function (blip) {
-      return blip.ring();
-    }), function (ring) {
-      return ring.order();
-    });
-  };
+    function allBlips() {
+        return allQuadrants().reduce(function (blips, quadrant) {
+            return blips.concat(quadrant.blips());
+        }, []);
+    }
 
-  self.quadrants = function () {
-    return quadrants;
-  };
+    self.rings = function () {
+        return sortBy(map(uniqBy(allBlips(), function (blip) {
+            return blip.ring().name();
+        }), function (blip) {
+            return blip.ring();
+        }), function (ring) {
+            return ring.order();
+        });
+    };
 
-  return self;
-};
+    self.quadrants = function () {
+        return quadrants;
+    };
 
-module.exports = Radar;
+    return self;
+}
