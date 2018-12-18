@@ -2,9 +2,6 @@ import { select, arc, selectAll, event } from 'd3';
 import d3tip from 'd3-tip';
 import each from 'lodash-es/each';
 import { RingCalculator } from '../util/ringCalculator';
-import { Chance } from 'chance';
-
-const chance = Chance();
 
 const MIN_BLIP_WIDTH = 12;
 
@@ -139,10 +136,11 @@ export function Radar(size, radar) {
         var adjustX = Math.sin(toRadian(startAngle)) - Math.cos(toRadian(startAngle));
         var adjustY = -Math.cos(toRadian(startAngle)) - Math.sin(toRadian(startAngle));
 
-        var radius = chance.floating({min: minRadius + blip.width / 2, max: maxRadius - blip.width / 2});
+        var radius = Math.random() * ((maxRadius - blip.width / 2) - (minRadius + blip.width / 2)) + minRadius + blip.width / 2;
+
         var angleDelta = Math.asin(blip.width / 2 / radius) * 180 / Math.PI;
         angleDelta = angleDelta > 45 ? 45 : angleDelta;
-        var angle = toRadian(chance.integer({min: angleDelta, max: 90 - angleDelta}));
+        var angle = toRadian(Math.floor(Math.random() * ((90 - angleDelta) - angleDelta) + angleDelta));
 
         var x = center() + radius * Math.cos(angle) * adjustX;
         var y = center() + radius * Math.sin(angle) * adjustY;
