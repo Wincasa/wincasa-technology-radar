@@ -1,7 +1,7 @@
 import { each } from 'lodash-es';
 
-const MalformedDataError = require('../../src/exceptions/malformedDataError');
-const ExceptionMessages = require('./exceptionMessages');
+import { MalformedDataError } from '../exceptions/malformedDataError';
+import { ExceptionMessages } from './exceptionMessages';
 
 export function ContentValidator(columnNames) {
     var self = {};

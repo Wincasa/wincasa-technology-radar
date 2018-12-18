@@ -1,5 +1,5 @@
-const MalformedDataError = require('../exceptions/malformedDataError');
-const ExceptionMessages = require('../util/exceptionMessages');
+import { MalformedDataError } from '../exceptions/malformedDataError';
+import { ExceptionMessages } from '../util/exceptionMessages';
 
 import { map, uniqBy, sortBy } from 'lodash-es';
 

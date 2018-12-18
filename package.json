@@ -43,7 +43,6 @@
   "dependencies": {
     "d3": "^4.13.0",
     "d3-tip": "^0.7.1",
-    "lodash-es": "^4.17.11",
-    "tabletop": "^1.5.2"
+    "lodash-es": "^4.17.11"
   }
 }

@@ -181,13 +181,6 @@ export function Radar(size, radar) {
             minRadius = ringCalculator.getRadius(i);
             maxRadius = ringCalculator.getRadius(i + 1);
 
-            var sumRing = ring.name().split('').reduce(function (p, c) {
-                return p + c.charCodeAt(0);
-            }, 0);
-            var sumQuadrant = quadrant.name().split('').reduce(function (p, c) {
-                return p + c.charCodeAt(0);
-            }, 0);
-
             var ringList = addRing(ring.name(), order);
             var allBlipCoordinatesInRing = [];
 

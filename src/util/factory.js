@@ -8,6 +8,7 @@ import { Radar as GraphingRadar } from '../graphing/radar';
 import { MalformedDataError } from '../exceptions/malformedDataError';
 import { ContentValidator } from './contentValidator';
 import { ExceptionMessages } from './exceptionMessages';
+import spreadsheet from '../csv/spreadsheet.csv';
 
 const radarName = 'Wincasa Technology Radar December 2018';
 
@@ -76,9 +77,7 @@ export function GoogleSheetInput() {
     var self = {};
     
     self.build = function () {
-        const csv = require('../csv/spreadsheet.csv');
-
-        var sheet = CSVDocument(csv);
+        var sheet = CSVDocument(spreadsheet);
 
         sheet.init().build();
     };

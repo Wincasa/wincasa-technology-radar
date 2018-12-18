@@ -12,7 +12,7 @@ let main = ['./src/site.js'];
 let common = ['./src/common.js'];
 
 let plugins = [
-    new BundleAnalyzerPlugin(),
+    //new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({filename: '[name].[hash].css'}),
     new HtmlWebpackPlugin({
         template: './src/index.html',
@@ -89,7 +89,6 @@ module.exports = (_env, argv) => {
     if (argv.mode === 'development') {
         config.entry.main.push('webpack-dev-server/client?http://0.0.0.0:8080');
         config.devtool = 'source-map';
-        console.log("DEV");
     }
 
     if (argv.mode === 'production') {
