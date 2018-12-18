@@ -2,7 +2,6 @@ name,ring,quadrant,isNew,description
 Scrum,adopt,techniques,TRUE,
 Peer review,adopt,techniques,TRUE,
 3+1 solutions,adopt,techniques,TRUE,
-Scrum,adopt,techniques,TRUE,
 Markdown,adopt,tools,TRUE,
 ReSharper,adopt,tools,TRUE,
 Git,adopt,tools,TRUE,
