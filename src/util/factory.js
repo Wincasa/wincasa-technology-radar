@@ -10,7 +10,7 @@ import { ContentValidator } from './contentValidator';
 import { ExceptionMessages } from './exceptionMessages';
 import spreadsheet from '../csv/spreadsheet.csv';
 
-const radarName = 'Wincasa Technology Radar December 2018';
+const radarName = 'Wincasa Technology Radar February 2019';
 
 const plotRadar = function (title, blips) {
     document.title = title;
