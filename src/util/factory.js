@@ -87,13 +87,10 @@ export function GoogleSheetInput() {
     } else {
         selectedRadar = urlParams.get('radar');
     }
-    const url = '../csv/' + selectedRadar + '.csv';
     
     self.build = function () {
-        import(/* webpackInclude: /\.csv$/ *//* webpackPrefetch: true */url)
-        .then(() => {
-            arguments;
-            debugger;
+        import(/* webpackInclude: /\.csv$/ *//* webpackPrefetch: true */`../csv/${selectedRadar}.csv`)
+        .then(({default: url}) => {
             var sheet = CSVDocument(url);
 
             sheet.init().build();
