@@ -87,6 +87,8 @@ export function GoogleSheetInput() {
     } else {
         selectedRadar = urlParams.get('radar');
     }
+
+    radarName += selectedRadar;
     
     self.build = function () {
         import(/* webpackInclude: /\.csv$/ *//* webpackPrefetch: true */`../csv/${selectedRadar}.csv`)
