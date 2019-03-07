@@ -2,6 +2,7 @@ import { select, arc, selectAll, event } from 'd3';
 import d3tip from 'd3-tip';
 import each from 'lodash-es/each';
 import { RingCalculator } from '../util/ringCalculator';
+import { radars } from '../util/factory';
 
 const MIN_BLIP_WIDTH = 12;
 
@@ -400,6 +401,16 @@ export function Radar(size, radar) {
             .text(document.title)
             .style('cursor', 'pointer')
             .on('click', redrawFullRadar);
+
+        const buttonBar = header.append('div');
+        radars.forEach(radar => {
+            buttonBar.append('div')
+                .attr('class', 'button')
+                .text(radar)
+                .on('click', () => {
+                    location.href = location.origin + '?radar=' + radar;
+                });
+        });
 
         return header;
     }

@@ -8,9 +8,13 @@ import { Radar as GraphingRadar } from '../graphing/radar';
 import { MalformedDataError } from '../exceptions/malformedDataError';
 import { ContentValidator } from './contentValidator';
 import { ExceptionMessages } from './exceptionMessages';
-import spreadsheet from '../csv/spreadsheet.csv';
 
-const radarName = 'Wincasa Technology Radar February 2019';
+let radarName = 'Wincasa Technology Radar ';
+export const radars = [
+    'March 2019',
+    'February 2019',
+    'December 2018'
+];
 
 const plotRadar = function (title, blips) {
     document.title = title;
@@ -75,11 +79,25 @@ const CSVDocument = function (url) {
 
 export function GoogleSheetInput() {
     var self = {};
+
+    var selectedRadar = '';
+    var urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('radar')) {
+        selectedRadar = radars[0];
+    } else {
+        selectedRadar = urlParams.get('radar');
+    }
+    const url = '../csv/' + selectedRadar + '.csv';
     
     self.build = function () {
-        var sheet = CSVDocument(spreadsheet);
+        import(/* webpackInclude: /\.csv$/ *//* webpackPrefetch: true */url)
+        .then(() => {
+            arguments;
+            debugger;
+            var sheet = CSVDocument(url);
 
-        sheet.init().build();
+            sheet.init().build();
+        })
     };
 
     return self;
