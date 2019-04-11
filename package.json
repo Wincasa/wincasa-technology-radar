@@ -43,6 +43,8 @@
     "yargs": "^5.0.0"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.4.3",
+    "core-js": "^3.0.1",
     "d3": "^4.13.0",
     "d3-tip": "^0.7.1",
     "lodash-es": "^4.17.11"

@@ -12,7 +12,7 @@ let main = ['./src/site.js'];
 let common = ['./src/common.js'];
 
 let plugins = [
-    new MiniCssExtractPlugin({filename: '[name].[hash].css'}),
+    new MiniCssExtractPlugin({ filename: '[name].[hash].css' }),
     new HtmlWebpackPlugin({
         template: './src/index.html',
         chunks: ['main'],
@@ -29,8 +29,8 @@ let plugins = [
 
 const config = {
     entry: {
-        'main' : main,
-        'common' : common
+        'main': main,
+        'common': common
     },
     node: {
         fs: 'empty',
@@ -48,7 +48,7 @@ const config = {
     module: {
         rules: [
             { test: /\.json$/, use: 'json-loader', exclude: /node_modules/ },
-            { test: /\.js$/, exclude: /node_modules/, use: 'babel-loader'},
+            { test: /\.js$/, exclude: /node_modules/, use: 'babel-loader' },
             {
                 test: /\.scss$/,
                 exclude: /node_modules/,
@@ -73,12 +73,20 @@ const config = {
                 loader: 'file-loader'
             },
             {
-                test: /\.csv/,
+                test: /\.js/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env']
+                        presets: [
+                            [
+                                '@babel/preset-env',
+                                {
+                                    useBuiltIns: "usage",
+                                    corejs: 3
+                                }
+                            ]
+                        ]
                     }
                 }
             }
@@ -101,7 +109,7 @@ module.exports = (_env, argv) => {
     }
 
     if (argv.mode === 'production') {
-        config.optimization = {minimize: true};
+        config.optimization = { minimize: true };
     }
 
     if (argv.analyze) {
