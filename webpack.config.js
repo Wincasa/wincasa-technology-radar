@@ -71,6 +71,16 @@ const config = {
                 test: /\.csv/,
                 exclude: /node_modules/,
                 loader: 'file-loader'
+            },
+            {
+                test: /\.csv/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
             }
         ]
     },
