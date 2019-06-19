@@ -47,11 +47,11 @@ Make sure you have nodejs installed.
 - `git clone https://github.com/Wincasa/wincasa-technology-radar.git`
 - `npm install`
 - `npm test` - to run your tests (they will not work at the moment)
-- `npm run dev` - to run application in localhost:8080. This will watch the .js and .css files and rebuild on file changes
+- `npm start` - to run application in localhost:8080. This will watch the .js and .css files and rebuild on file changes
 
 ### Don't want to install node? Run with one line docker (don't know if this works)
 
-     $ docker run -p 8080:8080 -v $PWD:/app -w /app -it node:7.3.0 /bin/sh -c 'npm install && npm run dev'
+     $ docker run -p 8080:8080 -v $PWD:/app -w /app -it node:7.3.0 /bin/sh -c 'npm install && npm start'
 
 After building it will start on localhost:8080
 
