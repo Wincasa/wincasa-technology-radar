@@ -11,6 +11,7 @@ import { ExceptionMessages } from './exceptionMessages';
 
 let radarName = 'Wincasa Technology Radar ';
 export const radars = [
+    'July 2019',
     'June 2019',
     'April 2019',
     'March 2019',
